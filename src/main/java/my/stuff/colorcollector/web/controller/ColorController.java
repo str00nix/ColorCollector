@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 @RequestMapping(value = {"/", "/index"})
@@ -35,11 +37,16 @@ public class ColorController {
     @PostMapping("/addColor")
     public String addColor(@RequestParam String colorName, @RequestParam String colorValue){
 
-        String[] colors = colorValue.split(" ");
+        Pattern colorGradientHexPattern = Pattern.compile("^(#[a-f0-9]{6}\\s#[a-f0-9]{6}|#[a-f0-9]{3}\\s#[a-f0-9]{3})$");
+        Matcher colorGradientHexMatcher = colorGradientHexPattern.matcher(colorValue);
 
+        if(colorGradientHexMatcher.find()){
+            String[] colors = colorValue.split(" ");
 
-
-        colorService.addColor(colorName, colors[0], colors[1]);
+            colorService.addColor(colorName, colors[0], colors[1]);
+        }else{
+            System.out.printf("Invalid color value (%s)", colorValue);
+        }
 
         return "redirect:index";
     }

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
+    <title>Color Collector</title>
+
+    <style>
+        html, body{
+            height: 100%;
+            /*min-height: 100vh;*/
+            margin:0;
+            background-color:#333;
+        }
+
+        #mainContent{
+            width: 100%;
+            height: 100%;
+            /*height: 98.4vh;*/
+        }
+
+        textarea#info{
+            display:inline;
+            resize: none;
+            background-color: #111;
+            font-weight: bold;
+            color:#eee;
+            box-shadow: none;
+            border: azure;
+            width: 440px;
+        }
+
+        #buttons{
+            /*width: 100%;*/
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="mainContent">
+    <div id="buttons">
+        <label for="info"></label><textarea id="info" readonly="readonly"></textarea>
+        <button onclick="prevColor()">Previous Color</button>
+        <button onclick="newColor()">New Color!</button>
+        <button onclick="nextColor()">Next Color</button>
+        <button onclick="deleteLastColor()">Delete Last Color</button>
+        <form th:method="POST" th:action="@{/addColor}" style="display:inline">
+            <select id="ddBGColor" name="ddTextColor" class="btn dropdown-toggle" style="font-weight: bold;">
+
+                <option hidden="hidden">Select Background Color</option>
+                <option th:each="c:${colors}"
+                        th:style="'background-color: '+${c.getValue1()}+'; color:'+${c.getValue2()}"
+                        th:text="${c.getValue1()} + ' - ' + ${c.getValue2()}"
+                        th:value="${c.getValue1()} + ' ' + ${c.getValue2()}"
+                        name="colorValue"
+                th:selected="${selectedColorValues eq c.value1 + ' ' + c.value2}">
+
+                </option>
+
+            </select>
+            <button onclick="deleteSelectedColor()">Delete Selected Color</button>
+            <span id="username"></span>
+            <label>
+                color name
+                <input type="text" name="colorName" value="">
+            </label>
+            <input type="text" name="colorValue" value="" hidden="hidden" id="colorValueInputField">
+            <input type="submit" value="add color to db" onclick="">
+<!--            <input type="button" name="add color to db" onclick="">-->
+    <!--        <button onclick="">Log In</button>-->
+    <!--        <button onclick="">Register</button>-->
+        </form>
+    </div>
+    <div th:if="${hasError}">
+        <div th:text="${error}"></div>
+    </div>
+</div>
+
+
+<script>
+
+    const dd = document.querySelector("#ddBGColor");
+    const bodyNode = document.querySelector("body");
+    const infoNode = document.querySelector("textarea#info");
+    const colorValueInputField = document.querySelector("input#colorValueInputField");
+
+    function generateRandomColor(a){
+        return	{
+            name: a ? a : '',
+            c1 : '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0'),
+            c2 : '#' + (Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0')
+        };
+    }
+
+    function updateInfo(){
+        console.log("updating");
+        console.log(infoNode.textContent);
+        console.log(colorValueInputField.value);
+        console.log(`${dd.children[dd.selectedIndex].value}`);
+        infoNode.textContent = `${dd.children[dd.selectedIndex].value}`;
+        colorValueInputField.value = `${dd.children[dd.selectedIndex].value}`;
+    }
+
+    function updateBackground(color){
+        if(color){
+            bodyNode.style.background = `linear-gradient(${color.c1},${color.c2}) no-repeat`;
+        }else{
+            const c = dd.children[dd.selectedIndex].value.split(" ");
+            bodyNode.style.background = `linear-gradient(${c[0]},${c[1]}) no-repeat`;
+        }
+        updateInfo();
+    }
+
+    function updateDropDownColor(color){
+        if(color){
+            dd.style.backgroundColor = color.c1;
+            dd.style.color = color.c2;
+        }else{
+            const c = dd.children[dd.selectedIndex].value.split(" ");
+            dd.style.backgroundColor = c[0];
+            dd.style.color = c[1];
+        }
+    }
+
+    function newColor(){
+        const color = generateRandomColor();
+        const newOption = document.createElement('option');
+
+        newOption.text = color.c1 + ' - ' + color.c2;
+        newOption.value = color.c1 + ' ' + color.c2;
+
+        newOption.style.backgroundColor = color.c1;
+        newOption.style.color = color.c2;
+
+        dd.add(newOption);
+
+        dd.selectedIndex = dd.length - 1;
+        updateDropDownColor();
+
+        updateBackground(color);
+    }
+
+    function ddchangefunc(){
+        updateDropDownColor();
+        updateBackground();
+    }
+    dd.addEventListener("change", ddchangefunc);
+
+    function deleteLastColor(){
+        if(dd.children.length > 1){
+            dd.selectedIndex = dd.children.length - 1;
+            deleteSelectedColor();
+        }
+    }
+
+    function deleteSelectedColor(){
+        if(dd.selectedIndex != 0){
+            var tempIndex = dd.selectedIndex;
+            dd.removeChild(dd.children[dd.selectedIndex]);
+
+            if(tempIndex == dd.children.length){
+                dd.selectedIndex = --tempIndex;
+            }else{
+                dd.selectedIndex = tempIndex;
+            }
+
+            updateDropDownColor();
+            updateBackground();
+
+        }else{
+            return;
+        }
+    }
+
+    function prevColor(){
+        if(dd.children.length < 3){
+            return;
+        }
+
+        dd.selectedIndex = dd.selectedIndex != 1 ? dd.selectedIndex - 1 : dd.children.length - 1;
+
+        updateDropDownColor();
+        updateBackground();
+    }
+
+    function nextColor(){
+        //if there is only 1 color, then there is no need for cycling
+        if(dd.children.length < 3){
+            return;
+        }
+
+        dd.selectedIndex = dd.selectedIndex + 1 != dd.children.length ? dd.selectedIndex + 1 : 1;
+
+        updateDropDownColor();
+        updateBackground();
+    }
+
+
+</script>
+
+</body>
+</html>

@@ -29,17 +29,20 @@ public class ColorServiceImpl implements ColorService {
 
     @Override
     public ColorInfo addColor(String name, String value1, String value2) {
-        ColorInfo tempColor = new ColorInfo(name, value1, value2);
 
         List<ColorInfo> colors = colorRepository.findAll();
 
         boolean colorAlreadyExists = false;
         for(int i = 0; i < colors.size(); i++){
-            if(Objects.equals(tempColor.getValue1(), colors.get(i).getValue1()) && Objects.equals(tempColor.getValue2(), colors.get(i).getValue2())){
+            if(Objects.equals(value1, colors.get(i).getValue1()) && Objects.equals(value2, colors.get(i).getValue2())){
                 colorAlreadyExists = true;
+                System.out.printf("Color gradient already exists. (%s - %s)\n", value1, value2);
                 break;
             }
         }
+
+
+        ColorInfo tempColor = new ColorInfo(name, value1, value2);
 
         if(!colorAlreadyExists){
             return colorRepository.save(tempColor);

@@ -13,6 +13,7 @@ public class ColorInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
     String name;
     String value1;
     String value2;

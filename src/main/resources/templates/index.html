@@ -7,7 +7,6 @@
     <style>
         html, body{
             height: 100%;
-            /*min-height: 100vh;*/
             margin:0;
             background-color:#333;
         }
@@ -15,7 +14,6 @@
         #mainContent{
             width: 100%;
             height: 100%;
-            /*height: 98.4vh;*/
         }
 
         textarea#info{
@@ -27,10 +25,6 @@
             box-shadow: none;
             border: azure;
             width: 440px;
-        }
-
-        #buttons{
-            /*width: 100%;*/
         }
     </style>
 
@@ -66,9 +60,6 @@
             </label>
             <input type="text" name="colorValue" value="" hidden="hidden" id="colorValueInputField">
             <input type="submit" value="add color to db" onclick="">
-<!--            <input type="button" name="add color to db" onclick="">-->
-    <!--        <button onclick="">Log In</button>-->
-    <!--        <button onclick="">Register</button>-->
         </form>
     </div>
     <div th:if="${hasError}">
@@ -93,10 +84,6 @@
     }
 
     function updateInfo(){
-        console.log("updating");
-        console.log(infoNode.textContent);
-        console.log(colorValueInputField.value);
-        console.log(`${dd.children[dd.selectedIndex].value}`);
         infoNode.textContent = `${dd.children[dd.selectedIndex].value}`;
         colorValueInputField.value = `${dd.children[dd.selectedIndex].value}`;
     }

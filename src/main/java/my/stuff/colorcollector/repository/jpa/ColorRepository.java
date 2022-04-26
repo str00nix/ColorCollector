@@ -9,7 +9,6 @@ public interface ColorRepository extends JpaRepository<ColorInfo, Long> {
 
     @Override
     Optional<ColorInfo> findById(Long aLong);
-//    Optional<ColorInfo> findColorInfoById(Long aLong);
 
 
 }

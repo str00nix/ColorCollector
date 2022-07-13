@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Color Collector</title>
 
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
     <style>
         html, body{
             height: 100%;
@@ -18,6 +20,7 @@
 
         textarea#info{
             display:inline;
+            visibility: hidden;
             resize: none;
             background-color: #111;
             font-weight: bold;
@@ -34,10 +37,10 @@
 <div id="mainContent">
     <div id="buttons">
         <label for="info"></label><textarea id="info" readonly="readonly"></textarea>
-        <button onclick="prevColor()">Previous Color</button>
-        <button onclick="newColor()">New Color!</button>
-        <button onclick="nextColor()">Next Color</button>
-        <button onclick="deleteLastColor()">Delete Last Color</button>
+        <button onclick="prevColor()" class="btn btn-info">Previous Color</button>
+        <button onclick="newColor()" class="btn btn-success">New Color!</button>
+        <button onclick="nextColor()" class="btn btn-info">Next Color</button>
+        <button onclick="deleteLastColor()" class="btn btn-danger">Delete Last Color</button>
         <form th:method="POST" th:action="@{/addColor}" style="display:inline">
             <select id="ddBGColor" name="ddTextColor" class="btn dropdown-toggle" style="font-weight: bold;">
 
@@ -52,14 +55,14 @@
                 </option>
 
             </select>
-            <button onclick="deleteSelectedColor()">Delete Selected Color</button>
+            <button onclick="deleteSelectedColor()" class="btn btn-danger">Delete Selected Color</button>
             <span id="username"></span>
             <label>
                 color name
-                <input type="text" name="colorName" value="">
+                <input type="text" name="colorName" value="" class="form-control form-control-dark w-100">
             </label>
             <input type="text" name="colorValue" value="" hidden="hidden" id="colorValueInputField">
-            <input type="submit" value="add color to db" onclick="">
+            <input type="submit" value="add color to db" onclick="" class="btn btn-success">
         </form>
     </div>
     <div th:if="${hasError}">
